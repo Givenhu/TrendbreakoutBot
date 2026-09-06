@@ -1,0 +1,162 @@
+
+Perfect! 🔥 The project is now in your GitHub repository.
+
+We're at the important part now: tell GitHub to unpack it and build the APK automatically.
+
+STEP 2 — Create the build file
+On your repository page:
+
+Tap Add file
+
+Tap Create new file
+
+In Name your file, type exactly:
+
+.github/workflows/build.yml
+In the big text box underneath, paste all of this:
+
+name: Build TrendBreakoutBot APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract project
+        run: |
+          mkdir project
+          unzip -q TrendBreakoutBot_V1_5_License_Admin_ScaleUp.zip -d project
+          echo "Extracted:"
+          find project -maxdepth 3 -type f | head -50
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK
+        run: |
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Install Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Build APK
+        working-directory: project/TrendBreakoutBot_Complete_V1_1/android
+        run: gradle assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: TrendBreakoutBot-APK
+          path: project/TrendBreakoutBot_Complete_V1_1/android/app/build/outputs/apk/debug/*.apk
+STEP 3
+Do NOT change anything else.
+
+Scroll down and tap the green:
+
+Commit changes
+
+Then GitHub should start building the app automatically. 🚀
+
+When you've pressed Commit changes, just tell me:
+
+“committed”
+
+and I'll tell you exactly where to go to get the APK.
+
+
+
+Yes! I can see it clearly. 🔥 The ZIP is successfully uploaded — we're good.
+
+I also notice your repository says Public. That's okay for tonight, but later we should make it Private, because the project contains your app source code.
+
+NEXT — just one thing
+On this screen, tap the three dots ... next to the green Code button.
+
+A menu should appear.
+
+Look for:
+
+Add file
+
+👉 Tap Add file → Create new file.
+
+Then stop there. Don't type anything yet.
+
+Tell me when you reach the Create new file screen, and I'll give you exactly what to put in it. We're moving! 🚀
+
+
+
+Perfect! 🔥 You're exactly on the “Create new file” screen.
+
+Now do these two things only:
+
+1️⃣ File name
+Tap “Name your file…” and type:
+
+.github/workflows/build.yml
+2️⃣ File contents
+Tap the big area that says “Enter file contents here” and paste this:
+
+name: Build TrendBreakoutBot APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract project
+        run: |
+          mkdir project
+          unzip -q TrendBreakoutBot_V1_5_License_Admin_ScaleUp.zip -d project
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK
+        run: |
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Build APK
+        working-directory: project/TrendBreakoutBot_Complete_V1_1/android
+        run: gradle assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: TrendBreakoutBot-APK
+          path: project/TrendBreakoutBot_Complete_V1_1/android/app/build/outputs/apk/debug/*.apk
