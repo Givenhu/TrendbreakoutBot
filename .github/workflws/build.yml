@@ -1,0 +1,92 @@
+
+Today 12:22 PM
+So iam stuck here 
+
+That whats i see
+
+Yes — the “New workflow” is actually what we want. 👍
+
+You do not need to manually create everything from scratch.
+
+From your repository:
+
+Tap Actions.
+
+Tap New workflow.
+
+Look for an option like “set up a workflow yourself” / “Configure”.
+
+That will open a new workflow editor.
+
+We'll put the correct Android APK build instructions there.
+
+Save/commit it.
+
+Then GitHub will run it and produce the APK.
+
+So ignore the old buil.yml for now. We can deal with it later.
+
+If you're already looking at the New workflow page, tell me what options you see and I'll guide you from there.
+
+
+Screenshot_20260907_132635_com.huawei.hwsearch.jpg
+
+Yes! You are on the correct screen now. 🎯
+
+And I checked your repository: the ZIP containing your Android project is already there, so we can use the workflow we prepared. 
+Do ONLY these 2 things:
+1. File name
+
+Tap “Name your file…” and type exactly:
+
+.github/workflows/build.yml
+2. File contents
+
+Tap “Enter file contents here” and paste this:
+
+name: Build TrendBreakoutBot APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract project
+        run: |
+          mkdir project
+          unzip -q TrendBreakoutBot_V1_5_License_Admin_ScaleUp.zip -d project
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK
+        run: |
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Build APK
+        working-directory: project/TrendBreakoutBot_Complete_V1_1/android
+        run: gradle assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: TrendBreakoutBot-APK
+          path: project/TrendBreakoutBot_Complete_V1_1/android/app/build/outputs/apk/debug/*.apk
